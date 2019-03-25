@@ -1,0 +1,82 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Matrix multiplication</title>
+    <style>
+
+    </style>
+
+    <script src="https://d3js.org/d3.v5.js"></script>
+</head>
+
+<body>
+
+    n: <input min=1 max=15 value=4 type="range" id="slidern">
+    m: <input min=1 max=15 value=4 type="range" id="sliderm">
+    p: <input min=1 max=15 value=4 type="range" id="sliderp">
+
+    <br>
+    <br>
+
+    <script>
+
+        var width = 800;
+        var height = 700;
+
+        svg = d3.select("body")
+            .append("svg")
+            .attr("width", width)
+            .attr("height", height)
+            .style("background", "lightyellow");
+
+        d3.select("#slidern").on("input", calculate_matrix_location)
+        d3.select("#sliderm").on("input", calculate_matrix_location)
+        d3.select("#sliderp").on("input", calculate_matrix_location)
+
+        calculate_matrix_location();
+
+
+	// This is the function where you draw your matrices
+        function calculate_matrix_location() {
+
+	    let n = d3.select("#slidern").property("value")
+            let m = d3.select("#sliderm").property("value")
+            let p = d3.select("#sliderp").property("value")
+		
+	    console.log("n slider value: " + n + " m slider value: " + m + " p slider value: " + p);
+		
+        }
+
+        //Below is where I started adding stuff from his slides
+        //He said he would upload it so I stopped
+        let myData = [];
+        count = 0;
+        for(i = 0; i < n; i++)
+            {
+                for(j = 0; j < m; j++)
+                    {
+                        let point = {};
+                        point.
+                    }
+            }
+        
+        
+        
+        function step() {
+        }
+
+        function play() {
+        }
+
+        d3.select("body").append("br")
+        d3.select("body").append("button").text("Step").on("click", step);
+        d3.select("body").append("button").text("Play").on("click", play);
+
+    </script>
+
+
+</body>
+
+</html>
