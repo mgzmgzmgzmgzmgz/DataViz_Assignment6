@@ -27,8 +27,8 @@
 
         svg = d3.select("body")
             .append("svg")
-            .attr("width", width)
-            .attr("height", height)
+            .attr("width", width + 40)
+            .attr("height", height + 40)
             .style("background", "lightyellow");
 
         d3.select("#slidern").on("input", calculate_matrix_location)
@@ -38,36 +38,75 @@
         calculate_matrix_location();
 
 
-	// This is the function where you draw your matrices
+        // This is the function where you draw your matrices
         function calculate_matrix_location() {
 
-	        let n = d3.select("#slidern").property("value")
+            let n = d3.select("#slidern").property("value")
             let m = d3.select("#sliderm").property("value")
             let p = d3.select("#sliderp").property("value")
-		
+
             console.log("n slider value: " + n + " m slider value: " + m + " p slider value: " + p);
-		
+
+            // populate cx and cy for your circles  ----> data
+            // join the data with circles
+            // invoke the generic case (update enter and exit selection)
+
+            let mydata =  [];
+            count = 0;
+            for (i = 0; i < n; i++)
+            {
+                for (j = 0; j < m; j++)
+                {
+                    let point = {};
+                    point.cx = ((width/2) / n) * (i) + 20;
+                    point.cy = ((height/2) / m) * (j) + 20;
+                    index = i*n + j; 
+                    mydata[count] = point;
+                    count++;
+                    console.log("index: " + index);
+                }
+            }
+            console.log("length of array: " + mydata.length);
+
+            circle = svg.selectAll(".circleA").data(mydata);
+            circle.exit().remove();
+            circle.enter().append("circle").merge(circle)
+            .attr("cx", function(d, i){
+                //console.log(d.cx + " " + i);
+                return d.cx;
+            })
+            .attr("cy", function(d, i){
+                //console.log(d.cy + " " + i);
+                return d.cy;
+            })
+            .attr("r",4)
+            .attr("fill", "black")
+            .attr("id", function(d,i){
+                return "id_"+i;
+            })
+            .classed("circleA", true);
+
+            
         }
 
-        //Below is where I started adding stuff from his slides
-        //He said he would upload it so I stopped
-        let myData = [];
-        count = 0;
-        for(i = 0; i < n; i++)
-            {
-                for(j = 0; j < m; j++)
-                    {
-                        let point = {};
-                        point.
-                    }
-            }
-        
-        
-        
+
         function step() {
+            fewcircle = svg.selectAll("#id_1, #id_2, #id_3").attr("fill", "red").attr("r", 8)
+            .transition()
+            .duration(2000)
+            .attr("r", 4)
+            .attr("fill", "black");
         }
 
         function play() {
+
+            counter = 0;
+            interval = d3.interval(function(){
+                counter++;
+                console.log("loop!!!!!" + counter);
+                if (counter == 5)
+                interval.stop();
+            }, 500);
         }
 
         d3.select("body").append("br")
