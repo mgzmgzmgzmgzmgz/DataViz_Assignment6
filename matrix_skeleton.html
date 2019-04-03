@@ -50,27 +50,62 @@
             // populate cx and cy for your circles  ----> data
             // join the data with circles
             // invoke the generic case (update enter and exit selection)
-
-            let mydata =  [];
-            count = 0;
+            let id_list1 = [];
+            let id_list2 = [];
+            let id_list3 = [];
+            
+            
+            let mydata1 =  [];
+            let mydata2 =  [];
+            let mydata3 =  [];
+            count1 = 0;
+            count2 = 0;
+            count3 = 0;
             for (i = 0; i < n; i++)
             {
                 for (j = 0; j < m; j++)
                 {
                     let point = {};
-                    point.cx = ((width/2) / n) * (i) + 20;
-                    point.cy = ((height/2) / m) * (j) + 20;
+                    point.cx = ((width/3) / n) * (i) + 20;
+                    point.cy = ((height/3) / m) * (j) + 20;
                     index = i*n + j; 
-                    mydata[count] = point;
-                    count++;
-                    console.log("index: " + index);
+                    mydata1[count1] = point;
+                    count1++;
+//                    console.log("index: " + index);
                 }
             }
-            console.log("length of array: " + mydata.length);
+            
+            for (i = 0; i < m; i++)
+            {
+                for (j = 0; j < p; j++)
+                {
+                    let point = {};
+                    point.cx = ((((width/3))) / m) * (i) + 70 + (width/3);
+                    point.cy = (((height/3)) / p) * (j) + 20;
+                    index = i*m + j; 
+                    mydata2[count2] = point;
+                    count2++;
+//                    console.log("index: " + index);
+                }
+            }
+            for (i = 0; i < n; i++)
+            {
+                for (j = 0; j < p; j++)
+                {
+                    let point = {};
+                    point.cx = ((((width/3))) / n) * (i) + 20;
+                    point.cy = (((height/3)) / p) * (j) + 70 + (height/3);
+                    index = i*n + j; 
+                    mydata2[count2] = point;
+                    count2++;
+//                    console.log("index: " + index);
+                }
+            }
+//            console.log("length of array: " + mydata1.length);
 
-            circle = svg.selectAll(".circleA").data(mydata);
-            circle.exit().remove();
-            circle.enter().append("circle").merge(circle)
+            circle1 = svg.selectAll(".circleA").data(mydata1);
+            circle1.exit().remove();
+            circle1.enter().append("circle").merge(circle1)
             .attr("cx", function(d, i){
                 //console.log(d.cx + " " + i);
                 return d.cx;
@@ -82,10 +117,49 @@
             .attr("r",4)
             .attr("fill", "black")
             .attr("id", function(d,i){
+                id_list1[i] = "id_"+i
                 return "id_"+i;
             })
             .classed("circleA", true);
+            
+            
+            circle2 = svg.selectAll(".circleB").data(mydata2);
+            circle2.exit().remove();
+            circle2.enter().append("circle").merge(circle2)
+            .attr("cx", function(d, i){
+                //console.log(d.cx + " " + i);
+                return d.cx;
+            })
+            .attr("cy", function(d, i){
+                //console.log(d.cy + " " + i);
+                return d.cy;
+            })
+            .attr("r",4)
+            .attr("fill", "black")
+            .attr("id", function(d,i){
+                id_list2[i] = "id_"+i;
+                return "id_"+i;
+            })
+            .classed("circleB", true);
 
+            circle3 = svg.selectAll(".circleC").data(mydata3);
+            circle3.exit().remove();
+            circle3.enter().append("circle").merge(circle3)
+            .attr("cx", function(d, i){
+                //console.log(d.cx + " " + i);
+                return d.cx;
+            })
+            .attr("cy", function(d, i){
+                //console.log(d.cy + " " + i);
+                return d.cy;
+            })
+            .attr("r",4)
+            .attr("fill", "black")
+            .attr("id", function(d,i){
+                id_list3[i] = "id_"+i;
+                return "id_"+i;
+            })
+            .classed("circleC", true);
             
         }
 
