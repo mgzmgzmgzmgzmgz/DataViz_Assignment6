@@ -21,104 +21,168 @@
     <br>
 
     <script>
+    //Beginning of script tag
+        
+        //////////////////////////////////////////////////////////////////////
+        //Create global variables for the script tag
+        let overall_step_counter = 0;
+        
+        let gone_through_all_steps = false;
+        
+        let step_counter_A = 0;
+        let step_counter_B = 0;
+        let step_counter_C_1 = 0;
+        let step_counter_C_2 = 0;
+        
+        let outer_m = 0;
+        let outer_n = 0;
+        let outer_p = 0;
+        
+        let cx_array1 = []
+        let cy_array1 = []
+        let cx_array2 = []
+        let cy_array2 = []
+        let cx_array3 = []
+        let cy_array3 = []
 
         var width = 800;
         var height = 700;
+        //Create global variables for the script tag
+        //////////////////////////////////////////////////////////////////////
 
+        
+        
+        //////////////////////////////////////////////////////////////////////
+        //Creates the background
         svg = d3.select("body")
             .append("svg")
             .attr("width", width + 40)
-            .attr("height", height + 40)
+            .attr("height", height + 40 - 150)
             .style("background", "lightyellow");
-
+        //Creates the background
+        //////////////////////////////////////////////////////////////////////
+        
+        
+        
+        //////////////////////////////////////////////////////////////////////
+        //Connects the sliders to the calculate matrix function
         d3.select("#slidern").on("input", calculate_matrix_location)
         d3.select("#sliderm").on("input", calculate_matrix_location)
         d3.select("#sliderp").on("input", calculate_matrix_location)
-
+        //Connects the sliders to the calculate matrix function
+        //////////////////////////////////////////////////////////////////////
+        
+        
+        
+        //////////////////////////////////////////////////////////////////////
+        //Runs the initial calc-matrix func to populate the page immediately
         calculate_matrix_location();
+        //Runs the initial calc-matrix func to populate the page immediately
+        //////////////////////////////////////////////////////////////////////
+        
 
-
-        // This is the function where you draw your matrices
+        
+        //////////////////////////////////////////////////////////////////////
+        //Begin calc matrix function
         function calculate_matrix_location() {
-
+            //////////////////////////////////////////////////////////////////////
+            //Resets all the values so the steps can start over
+            reset_values();
+            //Resets all the values so the steps can start over
+            //////////////////////////////////////////////////////////////////////
+            //Connects the sliders to the m, n, and p values
             let n = d3.select("#slidern").property("value")
             let m = d3.select("#sliderm").property("value")
             let p = d3.select("#sliderp").property("value")
-
-            console.log("n slider value: " + n + " m slider value: " + m + " p slider value: " + p);
-
-            // populate cx and cy for your circles  ----> data
-            // join the data with circles
-            // invoke the generic case (update enter and exit selection)
-            let id_list1 = [];
-            let id_list2 = [];
-            let id_list3 = [];
+            //Connects the sliders to the m, n, and p values
+            //////////////////////////////////////////////////////////////////////
             
-            
+            //////////////////////////////////////////////////////////////////////
+            //Set the outer values to the slider values
+            outer_m = m;
+            outer_n = n;
+            outer_p = p;
+            //Set the outer values to the slider values
+            //////////////////////////////////////////////////////////////////////
+
+            //////////////////////////////////////////////////////////////////////
+            //Lists and counters to be used in the for loops
             let mydata1 =  [];
             let mydata2 =  [];
             let mydata3 =  [];
+            
             count1 = 0;
             count2 = 0;
             count3 = 0;
-            for (i = 0; i < n; i++)
+            //Lists and counters to be used in the for loops
+            //////////////////////////////////////////////////////////////////////
+            
+            //////////////////////////////////////////////////////////////////////
+            //For loops to populate the data arrays 
+            for (i = 0; i < m; i++)
+            {
+                for (j = 0; j < n; j++)
+                {
+                    let point = {};
+                    point.cx = ((width/3) / m) * (i) + 20;
+                    point.cy = ((height/3) / n) * (j) + 20;
+                    point.row = n;
+                    point.column = m;
+                    cx_array1.push(((width/3) / m) * (i) + 20);
+                    cy_array1.push(((height/3) / n) * (j) + 20);
+                    mydata1[count1] = point;
+                    count1++;
+                }
+            }
+            
+            for (i = 0; i < p; i++)
             {
                 for (j = 0; j < m; j++)
                 {
                     let point = {};
-                    point.cx = ((width/3) / n) * (i) + 20;
-                    point.cy = ((height/3) / m) * (j) + 20;
-                    index = i*n + j; 
-                    mydata1[count1] = point;
-                    count1++;
-//                    console.log("index: " + index);
-                }
-            }
-            
-            for (i = 0; i < m; i++)
-            {
-                for (j = 0; j < p; j++)
-                {
-                    let point = {};
-                    point.cx = ((((width/3))) / m) * (i) + 70 + (width/3);
-                    point.cy = (((height/3)) / p) * (j) + 20;
-                    index = i*m + j; 
+                    point.cx = ((((width/3))) / p) * (i) + 70 + (width/3);
+                    point.cy = (((height/3)) / m) * (j) + 20;
+                    point.row = m;
+                    point.column = p;
+                    cx_array2.push(((((width/3))) / p) * (i) + 70 + (width/3));
+                    cy_array2.push((((height/3)) / m) * (j) + 20);
                     mydata2[count2] = point;
                     count2++;
-//                    console.log("index: " + index);
                 }
             }
-            for (i = 0; i < n; i++)
+            for (i = 0; i < p; i++)
             {
-                for (j = 0; j < p; j++)
+                for (j = 0; j < n; j++)
                 {
                     let point = {};
-                    point.cx = ((((width/3))) / n) * (i) + 20;
-                    point.cy = (((height/3)) / p) * (j) + 70 + (height/3);
-                    index = i*n + j; 
-                    mydata2[count2] = point;
-                    count2++;
-//                    console.log("index: " + index);
+                    point.cx = ((((width/3))) / p) * (i) + 20;
+                    point.cy = (((height/3)) / n) * (j) + 70 + (height/3);
+                    point.row = n;
+                    point.column = p;
+                    cx_array3.push(((((width/3))) / p) * (i) + 20);
+                    cy_array3.push((((height/3)) / n) * (j) + 70 + (height/3));
+                    mydata3[count3] = point;
+                    count3++;
                 }
             }
-//            console.log("length of array: " + mydata1.length);
+            //End of for loops to populate arrays
+            //////////////////////////////////////////////////////////////////////
 
+            //////////////////////////////////////////////////////////////////////
+            //Begin creating circles using data arrys
             circle1 = svg.selectAll(".circleA").data(mydata1);
             circle1.exit().remove();
             circle1.enter().append("circle").merge(circle1)
             .attr("cx", function(d, i){
-                //console.log(d.cx + " " + i);
                 return d.cx;
             })
             .attr("cy", function(d, i){
-                //console.log(d.cy + " " + i);
                 return d.cy;
             })
             .attr("r",4)
             .attr("fill", "black")
             .attr("id", function(d,i){
-                id_list1[i] = "id_"+i
-                return "id_"+i;
+                return "id_" + parseInt(d.row);
             })
             .classed("circleA", true);
             
@@ -127,18 +191,15 @@
             circle2.exit().remove();
             circle2.enter().append("circle").merge(circle2)
             .attr("cx", function(d, i){
-                //console.log(d.cx + " " + i);
                 return d.cx;
             })
             .attr("cy", function(d, i){
-                //console.log(d.cy + " " + i);
                 return d.cy;
             })
             .attr("r",4)
             .attr("fill", "black")
             .attr("id", function(d,i){
-                id_list2[i] = "id_"+i;
-                return "id_"+i;
+                return "id_" + parseInt(d.column);
             })
             .classed("circleB", true);
 
@@ -146,32 +207,162 @@
             circle3.exit().remove();
             circle3.enter().append("circle").merge(circle3)
             .attr("cx", function(d, i){
-                //console.log(d.cx + " " + i);
                 return d.cx;
             })
             .attr("cy", function(d, i){
-                //console.log(d.cy + " " + i);
                 return d.cy;
             })
             .attr("r",4)
             .attr("fill", "black")
             .attr("id", function(d,i){
-                id_list3[i] = "id_"+i;
                 return "id_"+i;
             })
             .classed("circleC", true);
+            //End of creating circles using data arrays
+            //////////////////////////////////////////////////////////////////////
             
+        //End of calc matrix function
+        //////////////////////////////////////////////////////////////////////
         }
-
-
+        
+        
+        
+        //////////////////////////////////////////////////////////////////////
+        //Allows the counter for A to be incremented correctly
+        function check_count_A(num){
+            if((num + parseInt(outer_n))> (parseInt(cx_array2.length) - 1)){
+                num = 1 + num + parseInt(outer_n)- (parseInt(outer_m) * parseInt(outer_n));
+            }
+            else{
+                num = num + parseInt(outer_n);
+            }
+            return num;
+        }
+        //Allows the counter for A to be incremented correctly
+        //////////////////////////////////////////////////////////////////////
+        
+        
+        
+        //////////////////////////////////////////////////////////////////////
+        //Allows the counter for B to be incremented correctly
+        function check_count_B(num){
+            if((num + parseInt(outer_m))> parseInt(cy_array1.length) - 1){
+                num = 1 + num + parseInt(outer_m) - (parseInt(outer_m) * parseInt(outer_p));
+            }
+            else{
+                num = num + parseInt(outer_m);
+            }
+            return num;
+        }
+        //Allows the counter for B to be incremented correctly
+        //////////////////////////////////////////////////////////////////////
+        
+        
+        
+        //////////////////////////////////////////////////////////////////////
+        //Allows the counters for C to be incremented correctly
+        function completion_checker(num){
+            if(1+num > (parseInt(outer_n) * parseInt(outer_p))){
+               gone_through_all_steps = true;
+            }
+            else{
+                num++;
+            }
+            return num;
+        }
+        //Allows the counters for C to be incremented correctly
+        //////////////////////////////////////////////////////////////////////
+        
+        
+        
+        //////////////////////////////////////////////////////////////////////
+        //Resets all the values, called when the sliders are moved
+        function reset_values(){
+            overall_step_counter = 0;
+            gone_through_all_steps = false;
+            step_counter_A = 0;
+            step_counter_B = 0;
+            step_counter_C_1 = 0;
+            step_counter_C_2 = 0;
+            outer_m = 0;
+            outer_n = 0;
+            outer_p = 0;
+            cx_array1 = []
+            cy_array1 = []
+            cx_array2 = []
+            cy_array2 = []
+            cx_array3 = []
+            cy_array3 = []
+        }
+        //Resets all values, called when the sliders are moved
+        //////////////////////////////////////////////////////////////////////
+        
+        
+        
+        //////////////////////////////////////////////////////////////////////
+        //Code fot the step function
         function step() {
-            fewcircle = svg.selectAll("#id_1, #id_2, #id_3").attr("fill", "red").attr("r", 8)
-            .transition()
-            .duration(2000)
-            .attr("r", 4)
-            .attr("fill", "black");
-        }
+            //If all the steps are complete stop running step
+            if(gone_through_all_steps){
+                console.log("Gone through all the steps");
+            }
+            //If all the steps are complete stop running step
+            
+            //Otherwise Run the step
+            else{
+                //Step for circle A
+                fewcircle = svg.selectAll(".circleA")
+                .filter(function(d, i) {
+                    return d.cy == cy_array1[step_counter_A];
+                })
+                .attr("fill", "red").attr("r", 12)
+                .transition()
+                .duration(2000)
+                .attr("r", 4)
+                .attr("fill", "black");
+                //Step for circle A
 
+                //Step for circle B
+                fewcircle = svg.selectAll(".circleB")
+                .filter(function(d, i) {
+                    return d.cx == cx_array2[step_counter_B];
+                })
+                .attr("fill", "blue").attr("r", 12)
+                .transition()
+                .duration(2000)
+                .attr("r", 4)
+                .attr("fill", "black");
+                //Step for circle B
+                
+                //Step for circle C
+                fewcircle = svg.selectAll(".circleC")
+                .filter(function(d, i) {
+                    return d.cx == cx_array3[step_counter_B] && d.cy == cy_array3[step_counter_A];
+                })
+                .attr("fill", "purple").attr("r", 12)
+                .transition()
+                .duration(2000)
+                .attr("r", 8)
+                //Step for circle C
+
+                //Check and increment the counters accordingly
+                step_counter_A = check_count_A(step_counter_A);
+                step_counter_B = check_count_B(step_counter_B);
+                overall_step_counter = completion_checker(overall_step_counter);
+                //Check and increment the counters accordingly
+            }
+            //Otherwise Run the step
+            
+            
+
+        }
+        //End code for the step function
+        //////////////////////////////////////////////////////////////////////
+
+        
+        
+        //////////////////////////////////////////////////////////////////////
+        //Code for the play button
         function play() {
 
             counter = 0;
@@ -182,14 +373,25 @@
                 interval.stop();
             }, 500);
         }
+        //Code for the play button
+        //////////////////////////////////////////////////////////////////////
 
+        
+        
+        //////////////////////////////////////////////////////////////////////
+        //Code to add buttons and connect them with the methods
         d3.select("body").append("br")
         d3.select("body").append("button").text("Step").on("click", step);
         d3.select("body").append("button").text("Play").on("click", play);
+        //Code to add buttons and connect them with the methods
+        //////////////////////////////////////////////////////////////////////
 
+        
+        
+    //End of script tag
     </script>
 
+    
 
 </body>
-
 </html>
