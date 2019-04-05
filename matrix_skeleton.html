@@ -27,7 +27,14 @@
         //Create global variables for the script tag
         let overall_step_counter = 0;
         
+        let B_array_started_over = false;
+        let C_array_started_over = false;
+        
+        
         let gone_through_all_steps = false;
+        
+        let just_ran = false;
+        let just_ran_c = false;
         
         let step_counter_A = 0;
         let step_counter_B = 0;
@@ -61,6 +68,8 @@
             .style("background", "lightyellow");
         //Creates the background
         //////////////////////////////////////////////////////////////////////
+        
+//        svg.append("line").attr("x1",100).attr("y1",100).attr("x2",200).attr("y2",200).attr("fill","black");
         
         
         
@@ -126,8 +135,6 @@
                     let point = {};
                     point.cx = ((width/3) / m) * (i) + 20;
                     point.cy = ((height/3) / n) * (j) + 20;
-                    point.row = n;
-                    point.column = m;
                     cx_array1.push(((width/3) / m) * (i) + 20);
                     cy_array1.push(((height/3) / n) * (j) + 20);
                     mydata1[count1] = point;
@@ -142,8 +149,6 @@
                     let point = {};
                     point.cx = ((((width/3))) / p) * (i) + 70 + (width/3);
                     point.cy = (((height/3)) / m) * (j) + 20;
-                    point.row = m;
-                    point.column = p;
                     cx_array2.push(((((width/3))) / p) * (i) + 70 + (width/3));
                     cy_array2.push((((height/3)) / m) * (j) + 20);
                     mydata2[count2] = point;
@@ -157,8 +162,6 @@
                     let point = {};
                     point.cx = ((((width/3))) / p) * (i) + 20;
                     point.cy = (((height/3)) / n) * (j) + 70 + (height/3);
-                    point.row = n;
-                    point.column = p;
                     cx_array3.push(((((width/3))) / p) * (i) + 20);
                     cy_array3.push((((height/3)) / n) * (j) + 70 + (height/3));
                     mydata3[count3] = point;
@@ -182,7 +185,7 @@
             .attr("r",4)
             .attr("fill", "black")
             .attr("id", function(d,i){
-                return "id_" + parseInt(d.row);
+                return "id_"+i;
             })
             .classed("circleA", true);
             
@@ -199,7 +202,7 @@
             .attr("r",4)
             .attr("fill", "black")
             .attr("id", function(d,i){
-                return "id_" + parseInt(d.column);
+                return "id_"+i;
             })
             .classed("circleB", true);
 
@@ -230,11 +233,10 @@
         //////////////////////////////////////////////////////////////////////
         //Allows the counter for A to be incremented correctly
         function check_count_A(num){
-            if((num + parseInt(outer_n))> (parseInt(cx_array2.length) - 1)){
-                num = 1 + num + parseInt(outer_n)- (parseInt(outer_m) * parseInt(outer_n));
-            }
-            else{
-                num = num + parseInt(outer_n);
+            if(B_array_started_over){
+//                console.log("Step counter A ran when it should");
+                num++;
+                B_array_started_over = false;
             }
             return num;
         }
@@ -246,8 +248,24 @@
         //////////////////////////////////////////////////////////////////////
         //Allows the counter for B to be incremented correctly
         function check_count_B(num){
-            if((num + parseInt(outer_m))> parseInt(cy_array1.length) - 1){
-                num = 1 + num + parseInt(outer_m) - (parseInt(outer_m) * parseInt(outer_p));
+            if((num + parseInt(outer_m) + parseInt(outer_m))> parseInt(cy_array2.length) - 1){
+                console.log("num")
+                console.log(num)
+                console.log("What it's going to be next time");
+                console.log((num + parseInt(outer_m) + parseInt(outer_m)));
+                console.log();
+                if(just_ran){
+                    just_ran = false;
+                }
+                else{
+                    B_array_started_over = true;
+                    just_ran = true;
+                }
+            }
+            
+            
+            if((num + parseInt(outer_m))> parseInt(cy_array2.length) - 1){
+                num = num + parseInt(outer_m) - (parseInt(outer_m) * parseInt(outer_p));
             }
             else{
                 num = num + parseInt(outer_m);
@@ -256,19 +274,36 @@
         }
         //Allows the counter for B to be incremented correctly
         //////////////////////////////////////////////////////////////////////
-        
-        
+        function check_count_C_1(cur_pos){
+            cy_ar_length = parseInt(outer_n) * parseInt(outer_p);
+            last_index = parseInt(outer_n) * parseInt(outer_p) - 1;
+            cur_pos = cur_pos + parseInt(outer_n);
+            
+            if(cur_pos > last_index){
+                cur_pos = cur_pos - last_index;
+            }
+            
+            return cur_pos;
+        }
+        function check_count_C_2(cur_pos){
+            cx_ar_length = parseInt(outer_n) * parseInt(outer_p);
+            last_index = parseInt(outer_n) * parseInt(outer_p) - 1;
+            cur_pos = cur_pos + parseInt(outer_n);
+            
+            if(cur_pos > last_index){
+                cur_pos = cur_pos - last_index;
+            }
+            
+            return cur_pos;
+        }
         
         //////////////////////////////////////////////////////////////////////
         //Allows the counters for C to be incremented correctly
-        function completion_checker(num){
-            if(1+num > (parseInt(outer_n) * parseInt(outer_p))){
+        function completion_checker(cur_num_steps){
+            all_steps = parseInt(outer_n) * parseInt(outer_p)
+            if(cur_num_steps == all_steps){
                gone_through_all_steps = true;
             }
-            else{
-                num++;
-            }
-            return num;
         }
         //Allows the counters for C to be incremented correctly
         //////////////////////////////////////////////////////////////////////
@@ -279,14 +314,25 @@
         //Resets all the values, called when the sliders are moved
         function reset_values(){
             overall_step_counter = 0;
+        
+            B_array_started_over = false;
+            C_array_started_over = false;
+        
+        
             gone_through_all_steps = false;
+        
+            just_ran = false;
+            just_ran_c = false;
+        
             step_counter_A = 0;
             step_counter_B = 0;
             step_counter_C_1 = 0;
             step_counter_C_2 = 0;
+        
             outer_m = 0;
             outer_n = 0;
             outer_p = 0;
+        
             cx_array1 = []
             cy_array1 = []
             cx_array2 = []
@@ -317,11 +363,11 @@
                 })
                 .attr("fill", "red").attr("r", 12)
                 .transition()
-                .duration(2000)
+                .duration(1000)
                 .attr("r", 4)
                 .attr("fill", "black");
                 //Step for circle A
-
+                
                 //Step for circle B
                 fewcircle = svg.selectAll(".circleB")
                 .filter(function(d, i) {
@@ -329,7 +375,7 @@
                 })
                 .attr("fill", "blue").attr("r", 12)
                 .transition()
-                .duration(2000)
+                .duration(1000)
                 .attr("r", 4)
                 .attr("fill", "black");
                 //Step for circle B
@@ -337,19 +383,30 @@
                 //Step for circle C
                 fewcircle = svg.selectAll(".circleC")
                 .filter(function(d, i) {
-                    return d.cx == cx_array3[step_counter_B] && d.cy == cy_array3[step_counter_A];
+                    return d.cx == cx_array3[step_counter_C_2] && d.cy == cy_array3[step_counter_C_1];
                 })
                 .attr("fill", "purple").attr("r", 12)
                 .transition()
-                .duration(2000)
+                .duration(1000)
                 .attr("r", 8)
                 //Step for circle C
 
                 //Check and increment the counters accordingly
                 step_counter_A = check_count_A(step_counter_A);
                 step_counter_B = check_count_B(step_counter_B);
-                overall_step_counter = completion_checker(overall_step_counter);
+                step_counter_C_1 = check_count_C_1(step_counter_C_1);
+                step_counter_C_2 = check_count_C_2(step_counter_C_2);
+                overall_step_counter++;
                 //Check and increment the counters accordingly
+//                
+//                console.log("p");
+//                console.log(outer_p);
+//                console.log("n");
+//                console.log(outer_n);
+//                console.log("cx_array3");
+//                console.log(cx_array3);
+//                console.log("cy_array3");
+//                console.log(cy_array3);
             }
             //Otherwise Run the step
             
@@ -364,12 +421,16 @@
         //////////////////////////////////////////////////////////////////////
         //Code for the play button
         function play() {
-
+//            while(!gone_through_all_steps){
+//                step();
+//                setTimeout(console.log(), 3000);
+//            }
             counter = 0;
             interval = d3.interval(function(){
+                step();
                 counter++;
                 console.log("loop!!!!!" + counter);
-                if (counter == 5)
+                if (counter == parseInt(outer_n) * parseInt(outer_p))
                 interval.stop();
             }, 500);
         }
