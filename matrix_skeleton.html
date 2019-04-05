@@ -69,7 +69,53 @@
         //Creates the background
         //////////////////////////////////////////////////////////////////////
         
-//        svg.append("line").attr("x1",100).attr("y1",100).attr("x2",200).attr("y2",200).attr("fill","black");
+        
+        
+        //////////////////////////////////////////////////////////////////////
+        //Draws the x and =
+        let line_1_x = 265;
+        let line_1_y = 83;
+        
+        svg.append("line")
+            .attr("x1",line_1_x)
+            .attr("y1",line_1_y)
+            .attr("x2",line_1_x + 40)
+            .attr("y2",line_1_y + 50)
+            .attr("stroke","black")
+            .attr("stroke-width",5);
+        
+        
+        svg.append("line")
+            .attr("x1",line_1_x)
+            .attr("y1",line_1_y + 50)
+            .attr("x2",line_1_x + 40)
+            .attr("y2",line_1_y)
+            .attr("stroke","black")
+            .attr("stroke-width",5);
+        
+        
+        let equals_sign_x = 650;
+        let equals_sign_y = 100;
+        let bottom_y = 20;
+        
+        svg.append("line")
+            .attr("x1",equals_sign_x)
+            .attr("y1",equals_sign_y)
+            .attr("x2",equals_sign_x + 40)
+            .attr("y2",equals_sign_y)
+            .attr("stroke","black")
+            .attr("stroke-width",5);
+        
+        
+        svg.append("line")
+            .attr("x1",equals_sign_x)
+            .attr("y1",equals_sign_y + bottom_y)
+            .attr("x2",equals_sign_x + 40)
+            .attr("y2",equals_sign_y + bottom_y)
+            .attr("stroke","black")
+            .attr("stroke-width",5);
+        //Draws the x and =
+        //////////////////////////////////////////////////////////////////////
         
         
         
