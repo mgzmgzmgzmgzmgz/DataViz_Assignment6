@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html>
+<meta charset="utf-8">
+<head>
+  <title>Treemap layout (with labels)</title>
+</head>
+
+<style>
+rect {
+/*  fill: cadetblue;*/
+  opacity: 0.3;
+  stroke: white;
+}
+text {
+  font-family: "Helvetica Neue", Helvetica, sans-serif;
+  fill: white;
+  font-size: 10px;
+}
+</style>
+
+<body>
+  <svg width="1000" height="750">
+    <g></g>
+  </svg>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.2.2/d3.min.js"></script>
+  <script>
+      
+      
+      var continent_data = {"name":"World",
+                            "children": [
+          
+                            { 
+                            "name":"Asia",
+                            "children":[
+                                {
+                                "name":"China",
+                                "parent":"Asia",
+                                "value": 1370000000
+                                },
+                                {
+                                "name":"India",
+                                "parent":"Asia",
+                                "value": 1299000000
+                                },
+                                {
+                                "name":"Indonesia",
+                                "parent":"Asia",
+                                "value": 255460000
+                                },
+                                {
+                                "name":"Pakistan",
+                                "parent":"Asia",
+                                "value": 191780000
+                                },
+                                {
+                                "name":"Bangladesh",
+                                "parent":"Asia",
+                                "value": 158760000
+                                },
+                                {
+                                "name":"Japan",
+                                "parent":"Asia",
+                                "value": 126890000
+                                },
+                                {
+                                "name":"The Philippines",
+                                "parent":"Asia",
+                                "value": 102960000
+                                },
+                                {
+                                "name":"Vietnam",
+                                "parent":"Asia",
+                                "value": 91810000
+                                }
+                                ]
+                        },
+                        { 
+                            "name":"North America",
+                            "children":[
+                                {
+                                "name":"United States",
+                                "parent":"North America",
+                                "value": 327200000
+                                },
+                                {
+                                "name":"Mexico",
+                                "parent":"North America",
+                                "value": 129200000
+                                },
+                                {
+                                "name":"Canada",
+                                "parent":"North America",
+                                "value": 37060000
+                                },
+                                {
+                                "name":"Guatemala",
+                                "parent":"North America",
+                                "value": 16910000
+                                },
+                                {
+                                "name":"Cuba",
+                                "parent":"North America",
+                                "value": 11480000
+                                },
+                                {
+                                "name":"Haiti",
+                                "parent":"North America",
+                                "value": 10980000
+                                },
+                                {
+                                "name":"Dominican Republic",
+                                "parent":"North America",
+                                "value": 10770000
+                                },
+                                {
+                                "name":"Honduras",
+                                "parent":"North America",
+                                "value": 9265000
+                                }
+                                ]
+                        },
+                        { 
+                            "name":"Europe",
+                            "children":[
+                                {
+                                "name":"Russia",
+                                "parent":"Europe",
+                                "value": 143964709
+                                },
+                                {
+                                "name":"Germany",
+                                "parent":"Europe",
+                                "value": 82293457
+                                },
+                                {
+                                "name":"Turkey",
+                                "parent":"Europe",
+                                "value": 81916871
+                                },
+                                {
+                                "name":"United Kingdom",
+                                "parent":"Europe",
+                                "value": 66573504
+                                },
+                                {
+                                "name":"France",
+                                "parent":"Europe",
+                                "value": 65233271
+                                },
+                                {
+                                "name":"Italy",
+                                "parent":"Europe",
+                                "value": 59290969
+                                },
+                                {
+                                "name":"Spain",
+                                "parent":"Europe",
+                                "value": 46397452
+                                },
+                                {
+                                "name":"Ukraine",
+                                "parent":"Europe",
+                                "value": 44009214
+                                }
+                                ]
+                        },
+                        { 
+                            "name":"Africa",
+                            "children":[
+                                {
+                                "name":"Nigeria",
+                                "parent":"Africa",
+                                "value": 181563000
+                                },
+                                {
+                                "name":"Ethiopia",
+                                "parent":"Africa",
+                                "value": 103764000
+                                },
+                                {
+                                "name":"Egypt",
+                                "parent":"Africa",
+                                "value": 89125000
+                                },
+                                {
+                                "name":"Democratic Republic of the Congo",
+                                "parent":"Africa",
+                                "value": 77267000
+                                },
+                                {
+                                "name":"South Africa",
+                                "parent":"Africa",
+                                "value": 54957000
+                                },
+                                {
+                                "name":"Tanzania",
+                                "parent":"Africa",
+                                "value": 51046000
+                                },
+                                {
+                                "name":"Kenya",
+                                "parent":"Africa",
+                                "value": 45533000
+                                },
+                                {
+                                "name":"Sudan",
+                                "parent":"Africa",
+                                "value": 40235000
+                                }
+                                ]
+                        }]};
+      
+
+      
+      
+//var data = {
+//  "name": "A1",
+//  "children": [
+//    {
+//      "name": "B1",
+//      "children": [
+//        {
+//          "name": "C1",
+//          "value": 100
+//        },
+//        {
+//          "name": "C2",
+//          "value": 300
+//        },
+//        {
+//          "name": "C3",
+//          "value": 200
+//        }
+//      ]
+//    },
+//    {
+//      "name": "B2",
+//      "value": 200
+//    }
+//  ]
+//};
+
+var treemapLayout = d3.treemap()
+  .size([1000, 750])
+  .paddingOuter(16);
+
+var rootNode = d3.hierarchy(continent_data)
+
+rootNode.sum(function(d) {
+  return d.value;
+});
+
+treemapLayout(rootNode);
+
+var nodes = d3.select('svg g')
+  .selectAll('g')
+  .data(rootNode.descendants())
+  .enter()
+  .append('g')
+  .attr('transform', function(d) {return 'translate(' + [d.x0, d.y0] + ')'})
+
+console.log(rootNode.descendants().data);      
+      
+nodes
+    .filter(function (d,i){
+//    console.log(d.data.parent);
+    return d.data.parent == "Africa";
+})
+    .append('rect')
+    .attr('fill','red')
+    .attr('width', function(d) { return d.x1 - d.x0; })
+    .attr('height', function(d) { return d.y1 - d.y0; })
+      
+nodes
+    .filter(function (d,i){
+//    console.log(d.data.parent);
+    return d.data.parent == "Europe";
+})
+    .append('rect')
+    .attr('fill','cadetblue')
+    .attr('width', function(d) { return d.x1 - d.x0; })
+    .attr('height', function(d) { return d.y1 - d.y0; })
+      
+      nodes
+    .filter(function (d,i){
+//    console.log(d.data.parent);
+    return d.data.parent == "North America";
+})
+    .append('rect')
+    .attr('fill','yellow')
+    .attr('width', function(d) { return d.x1 - d.x0; })
+    .attr('height', function(d) { return d.y1 - d.y0; })
+      
+nodes
+    .filter(function (d,i){
+//    console.log(d.data.parent);
+    return d.data.parent == "Asia";
+})
+    .append('rect')
+    .attr('fill','green')
+    .attr('width', function(d) { return d.x1 - d.x0; })
+    .attr('height', function(d) { return d.y1 - d.y0; })
+      
+nodes
+    .filter(function (d,i){
+//    console.log(d.data.parent);
+    return !d.data.parent ;
+})
+    .append('rect')
+    .attr('fill','black')
+    .attr('width', function(d) { return d.x1 - d.x0; })
+    .attr('height', function(d) { return d.y1 - d.y0; })
+      
+      
+nodes
+  .append('text')
+  .attr('dx', 4)
+  .attr('dy', 14)
+  .text(function(d) {
+    return d.data.name;
+  })
+      
+
+
+  </script>
+</body>
+</html>
