@@ -20,3 +20,21 @@ def bilinear_inter(top_arr, bottom_arr, x_pos, y_pos):
     vert_top_down_array[len(vert_top_down_array)-1] = bottom_horz_val
     return linear_interp(vert_top_down_array, y_pos)
 
+
+def access_orig_array_as_matrix(row, column, arr):
+    index = 0
+    for i in range(0, row):
+        index = index + 128
+
+    index = index + column
+
+    return arr[index]
+
+def access_new_array_as_matrix(row, column, arr):
+    index = 0
+    for i in range(0, row):
+        index = index + 1024
+
+    index = index + column
+
+    return arr[index]
